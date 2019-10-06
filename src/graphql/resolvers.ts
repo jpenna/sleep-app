@@ -1,22 +1,19 @@
-import { IDataSources } from './dataSources';
-
-interface IContext { dataSources: IDataSources, user: { email: String } }
+import { SleepRecordType, IApolloContent } from 'src/types';
 
 export default {
   Query: {
-    sleepRecord(startTime: String) {
+    sleepRecord(startTime: string) {
       return {startTime: 123412312, endTime: 12341234 }
     },
 
-    sleepList(_: any, __: any, { dataSources, user }: IContext) {
-      console.log(user)
+    sleepList(_: any, __: any, { dataSources, user }: IApolloContent) {
       return dataSources.userData.getSleepLog();
     },
   },
 
   Mutation: {
-    updateSleep() {
-
+    updateSleep(_: any, { startTime, endTime }: SleepRecordType, { dataSources, user }: IApolloContent) {
+      return dataSources.userData.updateSleepRecord(user.email, { startTime, endTime })
     },
 
     removeSleep() {

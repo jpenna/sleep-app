@@ -1,10 +1,10 @@
 import { ApolloServer } from 'apollo-server-express';
 
+import userModel from '../db/models/user';
+
 import typeDefs from './schema';
 import resolvers from './resolvers';
 import dataSources from './dataSources';
-
-import userModel from '../db/models/user';
 
 export default new ApolloServer({
   typeDefs,

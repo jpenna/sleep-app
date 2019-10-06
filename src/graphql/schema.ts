@@ -8,28 +8,26 @@ export default gql`
 
   type Mutation {
     updateSleep(
-      id: ID
       startTime: String!
-      endTime: String!
+      endTime: String
     ): SleepUpdateResponse!
-    removeSleep(id: ID): RemoveSleepResponse!
+    removeSleep(startTime: ID): RemoveSleepResponse!
   }
 
   type SleepRecord {
-    id: ID!
-    startTime: String!
-    endTime: String!
+    startTime: ID!
+    endTime: String
   }
 
   type SleepUpdateResponse {
     success: Boolean!
     error: String
-    sleepRecord: SleepRecord!
+    sleepRecord: SleepRecord
   }
 
   type RemoveSleepResponse {
+    startTime: String!
     success: Boolean!
     error: String
-    id: ID!
   }
 `;

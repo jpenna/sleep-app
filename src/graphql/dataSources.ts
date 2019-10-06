@@ -1,22 +1,8 @@
+import { UserType, SleepRecordType, IUser, IDataSources } from 'src/types';
 import { DataSource } from 'apollo-datasource';
 import { ApolloServerExpressConfig } from 'apollo-server-express';
 
 import UserModel from '../db/models/user';
-import { DataSources } from 'apollo-server-core/dist/graphqlOptions';
-
-type SleepRecordType = {
-  startTime: String;
-  endTime: String;
-}
-
-type UserType = {
-  id: String;
-  email: String;
-}
-
-export interface IDataSources extends DataSources<any> {
-  userData: UserData
-}
 
 export class UserData extends DataSource {
   context: ApolloServerExpressConfig['context']
@@ -36,12 +22,12 @@ export class UserData extends DataSource {
     }]
   }
 
-  updateSleepRecord({ startTime, endTime }: SleepRecordType) {
-
+  async updateSleepRecord(userEmail: IUser['email'], { startTime, endTime }: SleepRecordType) {
+    return await UserModel.updateSleepLog({ email: userEmail, startTime, endTime });
   }
 
-  removeSleepRecord({ startTime }: { startTime: String }): String {
-
+  removeSleepRecord({ startTime }: { startTime: SleepRecordType['startTime'] }): SleepRecordType['startTime'] | null {
+    return startTime;
   }
 }
 
