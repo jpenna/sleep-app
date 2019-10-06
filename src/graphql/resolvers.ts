@@ -1,4 +1,5 @@
 import { SleepRecordType, IApolloContent } from 'src/types';
+import { AssertionError } from 'assert';
 
 export default {
   Query: {
@@ -12,8 +13,23 @@ export default {
   },
 
   Mutation: {
-    updateSleep(_: any, { startTime, endTime }: SleepRecordType, { dataSources, user }: IApolloContent) {
-      return dataSources.userData.updateSleepRecord(user.email, { startTime, endTime })
+    async updateSleep(_: any, { startTime, endTime }: SleepRecordType, { dataSources, user }: IApolloContent) {
+      try {
+        if (startTime >= endTime) throw new Error('Start time should be before end time.');
+        const userObj = await dataSources.userData.updateSleepRecord(user.email, { startTime, endTime });
+        const sleepRecord = userObj.sleepLog[0];
+        return {
+          success: true,
+          error: null,
+          sleepRecord,
+        };
+      } catch(err) {
+        return {
+          success: false,
+          error: err.message,
+          sleepRecord: null,
+        };
+      }
     },
 
     removeSleep() {

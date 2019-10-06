@@ -9,8 +9,8 @@ export interface IUserSchema extends Model<IUser> {
 }
 
 export type SleepRecordType = {
-  startTime: string;
-  endTime: string;
+  startTime: number;
+  endTime: number;
 };
 
 export interface IUser extends Document {

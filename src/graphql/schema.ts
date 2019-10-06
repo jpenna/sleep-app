@@ -8,9 +8,10 @@ export default gql`
 
   type Mutation {
     updateSleep(
-      startTime: String!
-      endTime: String
+      startTime: Float!
+      endTime: Float
     ): SleepUpdateResponse!
+
     removeSleep(startTime: ID): RemoveSleepResponse!
   }
 
