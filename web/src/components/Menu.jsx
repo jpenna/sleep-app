@@ -4,6 +4,8 @@ import { Tab, Tabs } from '@material-ui/core';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import EqualizerOutlinedIcon from '@material-ui/icons/EqualizerOutlined';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
+import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
+import PersonIcon from '@material-ui/icons/Person';
 
 export default function Menu({ tab, setTab }) {
   return (
@@ -14,10 +16,13 @@ export default function Menu({ tab, setTab }) {
         indicatorColor="primary"
         textColor="primary"
         aria-label="tabs"
+        variant="fullWidth"
       >
         <Tab label="List" icon={<FormatListBulletedIcon />} />
         <Tab label="Charts" icon={<EqualizerOutlinedIcon />} />
         <Tab label="Reports" icon={<DescriptionOutlinedIcon />} />
+        <Tab label="User" icon={<PersonIcon />} />
+        <Tab label="Record" icon={<AddOutlinedIcon />} />
       </Tabs>
     </>
   );

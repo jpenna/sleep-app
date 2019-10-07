@@ -3,6 +3,8 @@ import { Paper, Table, TableHead, TableCell, TableBody, TableRow, Button } from 
 import { makeStyles } from '@material-ui/core/styles';
 import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined';
 
+import Filters from './Filters';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -29,35 +31,38 @@ const rows = [
 export default function ListContent() {
   const classes = useStyles();
   return (
-    <Paper className={classes.root}>
-      <Table className={classes.table}>
-        <TableHead>
-          <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Start</TableCell>
-            <TableCell>End</TableCell>
-            <TableCell>Duration</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell component="th" scope="row">
-                {row.date}
-              </TableCell>
-              <TableCell>{row.start}</TableCell>
-              <TableCell>{row.end}</TableCell>
-              <TableCell>{row.duration}</TableCell>
-              <TableCell>
-                <Button onClick={() => {}}>
-                  <HighlightOffOutlinedIcon />
-                </Button>
-              </TableCell>
+    <>
+      <Filters />
+      <Paper className={classes.root}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell>Start</TableCell>
+              <TableCell>End</TableCell>
+              <TableCell>Duration</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Paper>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell component="th" scope="row">
+                  {row.date}
+                </TableCell>
+                <TableCell>{row.start}</TableCell>
+                <TableCell>{row.end}</TableCell>
+                <TableCell>{row.duration}</TableCell>
+                <TableCell>
+                  <Button onClick={() => {}}>
+                    <HighlightOffOutlinedIcon />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
+    </>
   );
 }
