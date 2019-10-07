@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc && node ./build/app.js",
-    "dev": "yarn run mongo:start && ts-node-dev --ignore-watch node_modules --no-notify --respawn --transpile-only ./src/app.ts",
-    "mongo:start": "mkdir db_data; docker-compose up -d",
+    "start": "yarn run mongo:start && ts-node-dev --ignore-watch node_modules --no-notify --respawn --transpile-only ./src/app.ts",
+    "mongo:start": "cd ..; mkdir db_data; docker-compose up -d; cd -",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc"
   },
