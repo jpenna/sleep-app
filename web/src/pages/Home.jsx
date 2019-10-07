@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, Table } from '@material-ui/core';
 
 import Menu from '../components/Menu';
+import ListContent from '../components/ListContent';
 
 export default function Home() {
   const [tab, setTab] = useState(0);
@@ -9,9 +10,7 @@ export default function Home() {
   return (
     <>
       <Menu tab={tab} setTab={setTab} />
-      <Typography hidden={tab !== 0}>
-        List
-      </Typography>
+      {tab === 0 && <ListContent />}
       <Typography hidden={tab !== 1}>
         Charts
       </Typography>
