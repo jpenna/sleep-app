@@ -1,4 +1,4 @@
-import { UpdateSleepLogParamsType, GetSleepLogParamsType, IUser, IUserSchema } from 'src/types';
+import { UpdateSleepLogParamsType, GetSleepLogParamsType, IUser, IUserSchema, SleepRecordType } from 'src/types';
 import mongoose, { Schema } from 'mongoose';
 import { MongoError } from 'mongodb';
 
@@ -16,14 +16,14 @@ userSchema.index({ email: 1, 'sleepLog.endTime': 1 });
 
 userSchema.statics.updateSleepLog = async function(
   { email, startTime, endTime }: UpdateSleepLogParamsType
-): Promise<IUser['sleepLog']> {
+): Promise<SleepRecordType> {
   const recorded = await this.findOne({
     email,
     sleepLog: {
       $elemMatch: {
         $or: [
           // Before starting a new record, a pending one has to be finished
-          { 'startTime': { $ne: startTime }, 'endTime': null },
+          { 'endTime': null },
           // Can't have a record overlapping a previous record
           { 'startTime': { $lte: startTime }, 'endTime': { $gte: startTime } },
           { 'startTime': { $lte: endTime }, 'endTime': { $gte: endTime } },
@@ -36,14 +36,25 @@ userSchema.statics.updateSleepLog = async function(
   }, 'sleepLog.$');
 
   if (recorded) {
-    const { startTime, endTime } = recorded.sleepLog[0];
-    if (!endTime) throw new MongoError(`You have a pending record which started at ${startTime}. Please, finish it first.`);
-    throw new MongoError(`You were sleeping at this time from ${startTime} to ${endTime}.`);
+    const { _id, startTime: recStartTime, endTime: recEndTime } = recorded.sleepLog[0];
+
+    if (!recEndTime) {
+      if (recStartTime - startTime !== 0) throw new MongoError(`You have a pending record, please finish it first. Start time: ${recStartTime.getTime()}`);
+      const updated = await this.findOneAndUpdate({
+        email,
+        sleepLog: { $elemMatch: { _id } },
+      }, {
+        $set: { 'sleepLog.$.endTime': endTime }
+      }, { new: true, projection: { 'sleepLog': { $elemMatch: { _id } } } });
+      return updated.sleepLog[0];
+    }
+
+    throw new MongoError(`You were sleeping at this time from ${recStartTime} to ${recEndTime}.`);
   }
 
   const _id = mongoose.Types.ObjectId();
 
-  return this.findOneAndUpdate(
+  const userObj = await this.findOneAndUpdate(
     email,
     {
       $push: {
@@ -55,9 +66,11 @@ userSchema.statics.updateSleepLog = async function(
     },
     { new: true, projection: { 'sleepLog': { $elemMatch: { _id } } } }
   );
+
+  return userObj.sleepLog[0];
 }
 
-userSchema.statics.getSleepLog = function(
+userSchema.statics.getSleepLog = async function(
   { email, from, to }: GetSleepLogParamsType
 ): Promise<{ sleepLog: IUser['sleepLog'] }> {
   const today = new Date();
@@ -66,13 +79,15 @@ userSchema.statics.getSleepLog = function(
   };
   if (to) filter.$lte = to;
 
-  return this.findOne({
+  const userObj = await this.findOne({
     email,
     sleepLog: {
       $elemMatch: { 'startTime': filter },
     },
   },
   'sleepLog');
+
+  return userObj.sleepLog;
 }
 
 export default mongoose.model<IUser, IUserSchema>('User', userSchema);

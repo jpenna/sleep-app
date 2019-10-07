@@ -6,8 +6,8 @@ export type UpdateSleepLogParamsType = { email: string, startTime: number, endTi
 export type GetSleepLogParamsType = { email: string, from: number, to: number };
 
 export interface IUserSchema extends Model<IUser> {
-  updateSleepLog(params: UpdateSleepLogParamsType): Promise<IUser>
-  getSleepLog(params: GetSleepLogParamsType): Promise<IUser>
+  updateSleepLog(params: UpdateSleepLogParamsType): Promise<SleepRecordType>
+  getSleepLog(params: GetSleepLogParamsType): Promise<IUser['sleepLog']>
 }
 
 export type SleepRecordType = {
@@ -18,7 +18,7 @@ export type SleepRecordType = {
 export interface IUser extends Document {
   id: string;
   email: string;
-  sleepLog: [SleepRecordType];
+  sleepLog: SleepRecordType[];
 }
 
 interface IApolloContent { dataSources: IDataSources, user: { email: string } }

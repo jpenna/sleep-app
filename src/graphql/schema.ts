@@ -3,21 +3,22 @@ import { gql } from 'apollo-server-express';
 export default gql`
   type Query {
     sleepLog(
-      from: String,
-      to: String,
+      from: Date,
+      to: Date,
     ): SleepLogResponse
   }
 
   type Mutation {
     updateSleep(
-      startTime: String!
-      endTime: String
+      startTime: Date!
+      endTime: Date
     ): SleepUpdateResponse!
   }
 
   type SleepRecord {
-    startTime: ID!
-    endTime: String
+    _id: ID!
+    startTime: Date!
+    endTime: Date
   }
 
   type SleepUpdateResponse {
@@ -31,4 +32,6 @@ export default gql`
     error: String
     sleepLog: [SleepRecord!]!
   }
+
+  scalar Date
 `;

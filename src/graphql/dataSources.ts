@@ -12,11 +12,10 @@ export class UserData extends DataSource {
   }
 
   async getSleepLog({ email, from, to }: GetSleepLogParamsType): Promise<IUser['sleepLog']> {
-    const userObj = await UserModel.getSleepLog({ email, from, to });
-    return userObj.sleepLog;
+    return await UserModel.getSleepLog({ email, from, to });
   }
 
-  updateSleepRecord(userEmail: IUser['email'], { startTime, endTime }: SleepRecordType): Promise<IUser> {
+  updateSleepRecord(userEmail: IUser['email'], { startTime, endTime }: SleepRecordType): Promise<SleepRecordType> {
     return UserModel.updateSleepLog({ email: userEmail, startTime, endTime });
   }
 
