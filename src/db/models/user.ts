@@ -79,15 +79,15 @@ userSchema.statics.getSleepLog = async function(
   };
   if (to) filter.$lte = to;
 
-  const userObj = await this.findOne({
-    email,
-    sleepLog: {
-      $elemMatch: { 'startTime': filter },
-    },
-  },
-  'sleepLog');
+  const sleepLog = await this.aggregate([
+    { $match: { email } },
+    // { $project: { sleepLog: 1 } },
+    { $unwind: '$sleepLog' },
+    // { $unwind: '$sleepLog.startTime' },
+    { $match: { 'sleepLog.startTime': filter } },
+  ]);
 
-  return userObj.sleepLog;
+  return sleepLog.map((r: any) => r.sleepLog);
 }
 
 userSchema.statics.deleteSleepRecord = async function(
