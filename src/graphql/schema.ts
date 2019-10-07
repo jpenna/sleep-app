@@ -2,17 +2,17 @@ import { gql } from 'apollo-server-express';
 
 export default gql`
   type Query {
-    sleepRecord: SleepRecord
-    sleepList: [SleepRecord!]!
+    sleepLog(
+      from: String,
+      to: String,
+    ): SleepLogResponse
   }
 
   type Mutation {
     updateSleep(
-      startTime: Float!
-      endTime: Float
+      startTime: String!
+      endTime: String
     ): SleepUpdateResponse!
-
-    removeSleep(startTime: ID): RemoveSleepResponse!
   }
 
   type SleepRecord {
@@ -26,9 +26,9 @@ export default gql`
     sleepRecord: SleepRecord
   }
 
-  type RemoveSleepResponse {
-    startTime: String!
+  type SleepLogResponse {
     success: Boolean!
     error: String
+    sleepLog: [SleepRecord!]!
   }
 `;

@@ -1,4 +1,4 @@
-import { updateSleepLogParamsType, IUser, IUserSchema } from 'src/types';
+import { UpdateSleepLogParamsType, GetSleepLogParamsType, IUser, IUserSchema } from 'src/types';
 import mongoose, { Schema } from 'mongoose';
 import { MongoError } from 'mongodb';
 
@@ -15,8 +15,8 @@ userSchema.index({ email: 1, 'sleepLog.startTime': 1, 'sleepLog.endTime': 1 });
 userSchema.index({ email: 1, 'sleepLog.endTime': 1 });
 
 userSchema.statics.updateSleepLog = async function(
-  { email, startTime, endTime }: updateSleepLogParamsType
-): Promise<IUser | null> {
+  { email, startTime, endTime }: UpdateSleepLogParamsType
+): Promise<IUser['sleepLog']> {
   const recorded = await this.findOne({
     email,
     sleepLog: {
@@ -29,7 +29,7 @@ userSchema.statics.updateSleepLog = async function(
           { 'startTime': { $lte: endTime }, 'endTime': { $gte: endTime } },
           // Can't have a record containing a previous record
           { 'startTime': { $gt: startTime, $lt: endTime } },
-          { 'endTime': { $gt: startTime, $lte: endTime } },
+          { 'endTime': { $gt: startTime, $lt: endTime } },
         ],
       },
     },
@@ -47,11 +47,32 @@ userSchema.statics.updateSleepLog = async function(
     email,
     {
       $push: {
-        sleepLog: { _id, startTime, endTime },
+        sleepLog: {
+          $each: [{ _id, startTime, endTime }],
+          $sort: { startTime: 1 },
+        },
       },
     },
     { new: true, projection: { 'sleepLog': { $elemMatch: { _id } } } }
   );
+}
+
+userSchema.statics.getSleepLog = function(
+  { email, from, to }: GetSleepLogParamsType
+): Promise<{ sleepLog: IUser['sleepLog'] }> {
+  const today = new Date();
+  const filter: { $gte: number, $lte?: number } = {
+    $gte: from || today.setDate(today.getDate() - 7),
+  };
+  if (to) filter.$lte = to;
+
+  return this.findOne({
+    email,
+    sleepLog: {
+      $elemMatch: { 'startTime': filter },
+    },
+  },
+  'sleepLog');
 }
 
 export default mongoose.model<IUser, IUserSchema>('User', userSchema);

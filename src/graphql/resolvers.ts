@@ -1,14 +1,24 @@
-import { SleepRecordType, IApolloContent } from 'src/types';
-import { AssertionError } from 'assert';
+import { SleepRecordType, IApolloContent, GetSleepLogParamsType } from 'src/types';
 
 export default {
   Query: {
-    sleepRecord(startTime: string) {
-      return {startTime: 123412312, endTime: 12341234 }
-    },
-
-    sleepList(_: any, __: any, { dataSources, user }: IApolloContent) {
-      return dataSources.userData.getSleepLog();
+    async sleepLog(_: any, { from, to }: GetSleepLogParamsType, { dataSources, user }: IApolloContent) {
+      try {
+        if (from >= to) throw new Error('`from` value should be before `to` value.');
+        const sleepLog = await dataSources.userData.getSleepLog({ email: user.email, from, to });
+        console.log(sleepLog)
+        return {
+          success: true,
+          error: null,
+          sleepLog,
+        };
+      } catch(err) {
+        return {
+          success: false,
+          error: err.message,
+          sleepLog: [],
+        };
+      }
     },
   },
 
@@ -31,9 +41,5 @@ export default {
         };
       }
     },
-
-    removeSleep() {
-
-    }
   }
 };

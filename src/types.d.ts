@@ -2,10 +2,12 @@ import { Model, Schema, Document } from 'mongoose';
 import { DataSources } from 'apollo-server-core/dist/graphqlOptions';
 import { UserData } from './graphql/dataSources';
 
-export type updateSleepLogParamsType = { email: string, startTime: string, endTime: string };
+export type UpdateSleepLogParamsType = { email: string, startTime: number, endTime: number };
+export type GetSleepLogParamsType = { email: string, from: number, to: number };
 
 export interface IUserSchema extends Model<IUser> {
-  updateSleepLog(params: updateSleepLogParamsType): Schema
+  updateSleepLog(params: UpdateSleepLogParamsType): Promise<IUser>
+  getSleepLog(params: GetSleepLogParamsType): Promise<IUser>
 }
 
 export type SleepRecordType = {

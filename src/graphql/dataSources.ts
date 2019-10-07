@@ -1,4 +1,4 @@
-import { UserType, SleepRecordType, IUser, IDataSources } from 'src/types';
+import { UserType, SleepRecordType, IUser, IDataSources, GetSleepLogParamsType } from 'src/types';
 import { DataSource } from 'apollo-datasource';
 import { ApolloServerExpressConfig } from 'apollo-server-express';
 
@@ -11,19 +11,13 @@ export class UserData extends DataSource {
     this.context = config.context;
   }
 
-  async updateUser({ id = 'abc', email = 'abc@email.com' }: UserType) {
-    const user = await UserModel.findByIdAndUpdate(id, { $set: { email } }, { new: true  })
+  async getSleepLog({ email, from, to }: GetSleepLogParamsType): Promise<IUser['sleepLog']> {
+    const userObj = await UserModel.getSleepLog({ email, from, to });
+    return userObj.sleepLog;
   }
 
-  getSleepLog(): [SleepRecordType] {
-    return [{
-      startTime: 'oi',
-      endTime: 'bye',
-    }]
-  }
-
-  async updateSleepRecord(userEmail: IUser['email'], { startTime, endTime }: SleepRecordType) {
-    return await UserModel.updateSleepLog({ email: userEmail, startTime, endTime });
+  updateSleepRecord(userEmail: IUser['email'], { startTime, endTime }: SleepRecordType): Promise<IUser> {
+    return UserModel.updateSleepLog({ email: userEmail, startTime, endTime });
   }
 
   removeSleepRecord({ startTime }: { startTime: SleepRecordType['startTime'] }): SleepRecordType['startTime'] | null {
