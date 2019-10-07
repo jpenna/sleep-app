@@ -28,7 +28,7 @@ export default function Headers() {
   }, []);
 
   return (
-    <AppBar>
+    <AppBar position="relative">
       <Toolbar>
         <DateTimePicker
           variant="inline"
