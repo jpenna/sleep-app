@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { DateTimePicker } from '@material-ui/pickers';
-import { AppBar, Toolbar, Button, ButtonGroup } from '@material-ui/core';
+import { Toolbar, Button, ButtonGroup } from '@material-ui/core';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -10,6 +10,12 @@ const useStyles = makeStyles(() => ({
   },
   datePickers: {
     flexGrow: 1,
+  },
+  datePickerSingle: {
+    marginLeft: '10px',
+  },
+  appBar: {
+    marginTop: '15px',
   },
 }));
 
@@ -40,7 +46,7 @@ export default function Filters() {
 
   return (
     <div className={style.root}>
-      <AppBar position="relative" color="inherit">
+      <div className={style.appBar}>
         <Toolbar>
           <div className={style.datePickers}>
             <DateTimePicker
@@ -50,6 +56,7 @@ export default function Filters() {
               onChange={setFromTime}
             />
             <DateTimePicker
+              className={style.datePickerSingle}
               variant="inline"
               label="To"
               value={toTime}
@@ -81,7 +88,7 @@ export default function Filters() {
             </Button>
           </ButtonGroup>
         </Toolbar>
-      </AppBar>
+      </div>
     </div>
   );
 }

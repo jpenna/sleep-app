@@ -4,9 +4,10 @@ import { Typography } from '@material-ui/core';
 import Menu from '../components/Menu';
 import ListContent from './ListContent';
 import UserContent from './UserContent';
+import AddRecordContent from './AddRecordContent';
 
 export default function Home() {
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(4);
 
   return (
     <>
@@ -22,9 +23,7 @@ export default function Home() {
 
       {tab === 3 && <UserContent />}
 
-      <Typography hidden={tab !== 4}>
-        +Report
-      </Typography>
+      {tab === 4 && <AddRecordContent />}
     </>
   );
 }
