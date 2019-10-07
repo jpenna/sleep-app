@@ -10,6 +10,8 @@ function getDefaultFrom() {
 export default {
   Query: {
     async sleepLog(_: any, { from, to }: GetSleepLogParamsType, { dataSources, user }: IApolloContent) {
+      console.log(from)
+      console.log(to)
       try {
         if (from && from >= to) {
           throw new Error('`from` value shouldn\'t be greater than `to` value.');
@@ -74,7 +76,9 @@ export default {
     name: 'Date',
     description: 'Date custom scalar type',
     parseValue(value) {
-      return new Date(parseInt(value)); // value from the client
+      // value from the client
+      if (Number.isInteger(value)) return new Date(parseInt(value));
+      return new Date(value);
     },
     serialize(value) {
       return value.getTime(); // value sent to the client

@@ -7,7 +7,7 @@ import UserContent from './UserContent';
 import AddRecordContent from './AddRecordContent';
 
 export default function Home() {
-  const [tab, setTab] = useState(4);
+  const [tab, setTab] = useState(0);
 
   return (
     <>

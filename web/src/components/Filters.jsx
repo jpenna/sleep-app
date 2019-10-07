@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { DateTimePicker } from '@material-ui/pickers';
 import { Toolbar, Button, ButtonGroup } from '@material-ui/core';
 import moment from 'moment';
@@ -25,10 +26,8 @@ const periodsMap = new Map([
   ['month', 'month'],
 ]);
 
-export default function Filters() {
+export default function Filters({ fromTime, setFromTime, toTime, setToTime }) {
   const style = useStyles();
-  const [fromTime, setFromTime] = useState(moment().startOf('day'));
-  const [toTime, setToTime] = useState(moment().endOf('day'));
 
   const period = useMemo(() => {
     const now = moment();
@@ -40,8 +39,8 @@ export default function Filters() {
 
   const updatePeriod = useCallback((selectedPeriod) => () => {
     const now = moment();
-    setFromTime(now.startOf(periodsMap.get(selectedPeriod)).toISOString());
-    setToTime(now.endOf(periodsMap.get(selectedPeriod)).toISOString());
+    setFromTime(now.startOf(periodsMap.get(selectedPeriod)).toDate());
+    setToTime(now.endOf(periodsMap.get(selectedPeriod)).toDate());
   }, []);
 
   return (
@@ -92,3 +91,10 @@ export default function Filters() {
     </div>
   );
 }
+
+Filters.propTypes = {
+  fromTime: PropTypes.objectOf(PropTypes.any).isRequired,
+  setFromTime: PropTypes.func.isRequired,
+  toTime: PropTypes.objectOf(PropTypes.any).isRequired,
+  setToTime: PropTypes.func.isRequired,
+};
