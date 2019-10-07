@@ -8,13 +8,15 @@
     "start": "yarn run mongo:start && ts-node-dev --ignore-watch node_modules --no-notify --respawn --transpile-only ./src/app.ts",
     "mongo:start": "cd ..; mkdir db_data; docker-compose up -d; cd -",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "apollo:update": "npx apollo service:push --endpoint=http://localhost:4000/graphql"
   },
   "author": "Juliano Penna",
   "license": "ISC",
   "dependencies": {
     "apollo-datasource": "^0.6.3",
     "apollo-server-express": "^2.9.5",
+    "cors": "^2.8.5",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "mongoose": "^5.7.3"
@@ -24,6 +26,7 @@
     "@types/mongoose": "^5.5.19",
     "@typescript-eslint/eslint-plugin": "^2.3.2",
     "@typescript-eslint/parser": "^2.3.2",
+    "apollo": "^2.19.0",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-graphql": "^3.1.0",

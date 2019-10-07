@@ -2,12 +2,23 @@ import { SleepRecordType, IApolloContent, GetSleepLogParamsType } from 'src/type
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
 
+function getDefaultFrom() {
+  const today = new Date();
+  return today.setDate(today.getDate() - 7);
+}
+
 export default {
   Query: {
     async sleepLog(_: any, { from, to }: GetSleepLogParamsType, { dataSources, user }: IApolloContent) {
       try {
-        if (from >= to) throw new Error('`from` value should be before `to` value.');
-        const sleepLog = await dataSources.userData.getSleepLog({ email: user.email, from, to });
+        if (from && from >= to) {
+          throw new Error('`from` value shouldn\'t be greater than `to` value.');
+        }
+        const sleepLog = await dataSources.userData.getSleepLog({
+          email: user.email,
+          from: from || getDefaultFrom(),
+          to,
+        });
         return {
           success: true,
           error: null,

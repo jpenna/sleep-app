@@ -73,17 +73,14 @@ userSchema.statics.updateSleepLog = async function(
 userSchema.statics.getSleepLog = async function(
   { email, from, to }: GetSleepLogParamsType
 ): Promise<{ sleepLog: IUser['sleepLog'] }> {
-  const today = new Date();
   const filter: { $gte: Date, $lte?: Date } = {
-    $gte: from || today.setDate(today.getDate() - 7),
+    $gte: new Date(from),
   };
   if (to) filter.$lte = to;
 
   const sleepLog = await this.aggregate([
     { $match: { email } },
-    // { $project: { sleepLog: 1 } },
     { $unwind: '$sleepLog' },
-    // { $unwind: '$sleepLog.startTime' },
     { $match: { 'sleepLog.startTime': filter } },
   ]);
 
