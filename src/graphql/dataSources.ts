@@ -15,12 +15,12 @@ export class UserData extends DataSource {
     return await UserModel.getSleepLog({ email, from, to });
   }
 
-  updateSleepRecord(userEmail: IUser['email'], { startTime, endTime }: SleepRecordType): Promise<SleepRecordType> {
+  updateSleepRecord(userEmail: IUser['email'], { startTime, endTime }: { startTime: Date, endTime: Date }): Promise<SleepRecordType> {
     return UserModel.updateSleepLog({ email: userEmail, startTime, endTime });
   }
 
-  removeSleepRecord({ startTime }: { startTime: SleepRecordType['startTime'] }): SleepRecordType['startTime'] | null {
-    return startTime;
+  deleteSleepRecord(userEmail: IUser['email'], { sleepId }: { sleepId: SleepRecordType['_id'] }): Promise<boolean> {
+    return UserModel.deleteSleepRecord({ email: userEmail, sleepId });
   }
 }
 

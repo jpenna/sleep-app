@@ -39,7 +39,7 @@ userSchema.statics.updateSleepLog = async function(
     const { _id, startTime: recStartTime, endTime: recEndTime } = recorded.sleepLog[0];
 
     if (!recEndTime) {
-      if (recStartTime - startTime !== 0) throw new MongoError(`You have a pending record, please finish it first. Start time: ${recStartTime.getTime()}`);
+      if (recStartTime.getTime() - startTime.getTime() !== 0) throw new MongoError(`You have a pending record, please finish it first. Start time: ${recStartTime.getTime()}`);
       const updated = await this.findOneAndUpdate({
         email,
         sleepLog: { $elemMatch: { _id } },
@@ -74,7 +74,7 @@ userSchema.statics.getSleepLog = async function(
   { email, from, to }: GetSleepLogParamsType
 ): Promise<{ sleepLog: IUser['sleepLog'] }> {
   const today = new Date();
-  const filter: { $gte: number, $lte?: number } = {
+  const filter: { $gte: Date, $lte?: Date } = {
     $gte: from || today.setDate(today.getDate() - 7),
   };
   if (to) filter.$lte = to;
@@ -88,6 +88,21 @@ userSchema.statics.getSleepLog = async function(
   'sleepLog');
 
   return userObj.sleepLog;
+}
+
+userSchema.statics.deleteSleepRecord = async function(
+  { email, sleepId }: { email: IUser['email'], sleepId: SleepRecordType['_id'] }
+): Promise<boolean> {
+  const result = await this.findOneAndUpdate({
+    email,
+    sleepLog: {
+      $elemMatch: { '_id': sleepId },
+    }
+  }, {
+    $pull: { 'sleepLog': { '_id': sleepId } }
+  });
+
+  return !!result;
 }
 
 export default mongoose.model<IUser, IUserSchema>('User', userSchema);

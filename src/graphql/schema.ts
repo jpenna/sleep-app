@@ -13,6 +13,10 @@ export default gql`
       startTime: Date!
       endTime: Date
     ): SleepUpdateResponse!
+
+    removeSleep(
+      sleepId: String!
+    ): RemoveSleepResponse!
   }
 
   type SleepRecord {
@@ -31,6 +35,11 @@ export default gql`
     success: Boolean!
     error: String
     sleepLog: [SleepRecord!]!
+  }
+
+  type RemoveSleepResponse {
+    success: Boolean!
+    error: String
   }
 
   scalar Date

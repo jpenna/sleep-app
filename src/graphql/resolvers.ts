@@ -26,7 +26,7 @@ export default {
   Mutation: {
     async updateSleep(_: any, { startTime, endTime }: SleepRecordType, { dataSources, user }: IApolloContent) {
       try {
-        if (startTime >= endTime) throw new Error('Start time should be before end time.');
+        if (endTime && startTime >= endTime) throw new Error('Start time should be before end time.');
         const sleepRecord = await dataSources.userData.updateSleepRecord(user.email, { startTime, endTime });
         return {
           success: true,
@@ -38,6 +38,22 @@ export default {
           success: false,
           error: err.message,
           sleepRecord: null,
+        };
+      }
+    },
+
+    async removeSleep(_: any, { sleepId }: { sleepId: SleepRecordType['_id'] }, { dataSources, user }: IApolloContent) {
+      try {
+        if (!sleepId) throw new Error('Please specify a sleep record ID.');
+        const result = await dataSources.userData.deleteSleepRecord(user.email, { sleepId });
+        return {
+          success: result,
+          error: result ? null : 'Record not found.',
+        };
+      } catch(err) {
+        return {
+          success: false,
+          error: err.message,
         };
       }
     },
