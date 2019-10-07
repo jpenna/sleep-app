@@ -21,7 +21,7 @@ export default function UserContent() {
 
   return (
     <div className={styles.container}>
-      <Card>
+      <Card className="pb-2">
         <Typography variant="subtitle2">
           Logged as
         </Typography>

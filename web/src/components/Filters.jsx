@@ -9,9 +9,6 @@ const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
   },
-  datePickers: {
-    flexGrow: 1,
-  },
   datePickerSingle: {
     marginLeft: '10px',
   },
@@ -46,8 +43,8 @@ export default function Filters({ fromTime, setFromTime, toTime, setToTime }) {
   return (
     <div className={style.root}>
       <div className={style.appBar}>
-        <Toolbar>
-          <div className={style.datePickers}>
+        <Toolbar className="md:justify-between justify-center flex-wrap">
+          <div className="flex-grow-0 sm:flex-grow">
             <DateTimePicker
               variant="inline"
               label="From"
@@ -66,6 +63,7 @@ export default function Filters({ fromTime, setFromTime, toTime, setToTime }) {
           <ButtonGroup
             color="primary"
             aria-label="large outlined button group"
+            className="mt-5 md:mt-0"
           >
             <Button
               variant={period === 'today' ? 'contained' : ''}

@@ -17,12 +17,13 @@ export default function Menu({ tab, setTab }) {
         textColor="primary"
         aria-label="tabs"
         variant="fullWidth"
+        centered
       >
-        <Tab label="List" icon={<FormatListBulletedIcon />} />
-        <Tab label="Charts" icon={<EqualizerOutlinedIcon />} />
-        <Tab label="Reports" icon={<DescriptionOutlinedIcon />} />
-        <Tab label="User" icon={<PersonIcon />} />
-        <Tab label="Record" icon={<AddOutlinedIcon />} />
+        <Tab label="List" icon={<FormatListBulletedIcon />} style={{ minWidth: 0 }} />
+        <Tab label="Charts" icon={<EqualizerOutlinedIcon />} style={{ minWidth: 0 }} />
+        <Tab label="Reports" icon={<DescriptionOutlinedIcon />} style={{ minWidth: 0 }} />
+        <Tab label="User" icon={<PersonIcon />} style={{ minWidth: 0 }} />
+        <Tab label="Record" icon={<AddOutlinedIcon />} style={{ minWidth: 0 }} />
       </Tabs>
     </>
   );
