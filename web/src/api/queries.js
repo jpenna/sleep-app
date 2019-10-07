@@ -9,6 +9,12 @@ export const GET_SLEEP_LOG = gql`
         _id
         startTime
         endTime
+
+        id @client
+        date @client
+        startTime @client
+        endTime @client
+        duration @client
       }
     }
   }

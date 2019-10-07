@@ -21,14 +21,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function formatDuration(duration) {
-  let hours = duration.hours().toString();
-  let minutes = duration.minutes().toString();
-  if (hours.length < 2) hours = `0${hours}`;
-  if (minutes.length < 2) minutes = `0${minutes}`;
-  return `${hours}:${minutes}`;
-}
-
 export default function ListContent() {
   const classes = useStyles();
   const [fromTime, setFromTime] = useState(moment().startOf('day'));
@@ -41,22 +33,7 @@ export default function ListContent() {
     DELETE_SLEEP_RECORD,
   );
 
-  const sleepLog = useMemo(() => {
-    if (!sleepLogRes || !sleepLogRes.sleepLog) return [];
-    return sleepLogRes.sleepLog.sleepLog.map((rec) => {
-      const startTime = moment(rec.startTime);
-      const endTime = moment(rec.endTime);
-      const duration = moment.duration(endTime.diff(startTime));
-
-      return {
-        id: rec._id,
-        date: startTime.format('ddd, MMM DD YYYY'),
-        startTime: startTime.format('LT'),
-        endTime: endTime.format('LT'),
-        duration: formatDuration(duration),
-      };
-    });
-  }, [sleepLogRes]);
+  const { sleepLog = [] } = ((sleepLogRes || {}).sleepLog || {});
 
   return (
     <>
