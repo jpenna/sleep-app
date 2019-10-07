@@ -3,7 +3,7 @@ import { Paper, Table, TableHead, TableCell, TableBody, TableRow, Button } from 
 import { makeStyles } from '@material-ui/core/styles';
 import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined';
 
-import Filters from './Filters';
+import Filters from '../components/Filters';
 
 const useStyles = makeStyles((theme) => ({
   root: {

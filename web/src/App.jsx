@@ -4,7 +4,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import MomentUtils from '@date-io/moment';
 
-import Home from './pages/Home';
+import Home from './views/Home';
 
 export default function App() {
   return (
