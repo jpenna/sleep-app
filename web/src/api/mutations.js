@@ -13,3 +13,12 @@ export const ADD_OR_UPDATE_SLEEP = gql`
     }
   }
 `;
+
+export const DELETE_SLEEP_RECORD = gql`
+  mutation DeleteSleep($id: String!) {
+    removeSleep(sleepId: $id) {
+      success
+      error
+    }
+  }
+`;

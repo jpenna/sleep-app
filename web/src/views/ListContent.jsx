@@ -3,9 +3,10 @@ import moment from 'moment';
 import { Paper, Table, TableHead, TableCell, TableBody, TableRow, Button, Typography, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 import { GET_SLEEP_LOG } from '../api/queries';
+import { DELETE_SLEEP_RECORD } from '../api/mutations';
 
 import Filters from '../components/Filters';
 
@@ -34,11 +35,15 @@ export default function ListContent() {
   const [toTime, setToTime] = useState(moment().endOf('day'));
 
   const variables = { from: fromTime.toISOString(), to: toTime.toISOString() };
-  const { data, loading, error } = useQuery(GET_SLEEP_LOG, { variables });
+  const { data: sleepLogRes, loading, error } = useQuery(GET_SLEEP_LOG, { variables });
+
+  const [deleteSleep, { data: deleteRes }] = useMutation(
+    DELETE_SLEEP_RECORD,
+  );
 
   const sleepLog = useMemo(() => {
-    if (!data || !data.sleepLog) return [];
-    return data.sleepLog.sleepLog.map((rec) => {
+    if (!sleepLogRes || !sleepLogRes.sleepLog) return [];
+    return sleepLogRes.sleepLog.sleepLog.map((rec) => {
       const startTime = moment(rec.startTime);
       const endTime = moment(rec.endTime);
       const duration = moment.duration(endTime.diff(startTime));
@@ -51,7 +56,7 @@ export default function ListContent() {
         duration: formatDuration(duration),
       };
     });
-  }, [data]);
+  }, [sleepLogRes]);
 
   return (
     <>
@@ -84,7 +89,7 @@ export default function ListContent() {
                 <TableCell>{row.endTime}</TableCell>
                 <TableCell>{row.duration}</TableCell>
                 <TableCell>
-                  <Button onClick={() => {}}>
+                  <Button onClick={() => deleteSleep({ variables: { id: row.id } })}>
                     <HighlightOffOutlinedIcon />
                   </Button>
                 </TableCell>
