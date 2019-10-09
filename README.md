@@ -63,3 +63,5 @@ yarn start
 - [ ] "Push&Play" record button (frontend)
 - [ ] Chart: Time went to bad, Sleep duration over time
 - [ ] Reports: Average sleep duration
+- [ ] Work on style
+- [ ] Tests
