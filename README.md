@@ -46,6 +46,11 @@ yarn start
 
 5. Open the server at http://localhost:3000/ or the address given in the terminal.
 
+## Tests
+
+No tests included. Because it is a small project with very short "coding life span",
+I decided to skip tests and focus my time on tech decisions, structure and features.
+
 ## Highlights
 
 - Reconnect DB
